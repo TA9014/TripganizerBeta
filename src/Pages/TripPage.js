@@ -2,7 +2,8 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components'
 import { AuthContext } from '../auth/Auth';
-import { ButtonWhiteBorder } from '../components/ButtonComponent'
+import { ButtonRedSmall, ButtonWhiteBorder } from '../components/ButtonComponent'
+import { InputRed, TextAreaRed } from '../components/InputComponent';
 import { firestore, auth } from '../database/firebase';
 
 
@@ -82,6 +83,12 @@ overflow-x: auto;
 function TripPage() {
     const [loading, setLoading] = useState(true);
     const { currentUser, trip, setTrip } = useContext(AuthContext);
+    const [isEdit, setIsEdit] = useState(false);
+
+    const changeEditStatus = () => {
+        setIsEdit(!isEdit)
+    }
+
     const getTripName = () => {
         const TripRef = firestore.collection('trip');
         TripRef
@@ -99,6 +106,34 @@ function TripPage() {
         history.push("/tripInfo")
     }
 
+    const [newTripName, setNewTripName] = useState('')
+    const changeTripName = (e) => {
+        setNewTripName(e.target.value)
+    }
+
+    const [newTripDetail, setNewTripDetail] = useState('')
+    const changeTripDetail = (e) => {
+        setNewTripDetail(e.target.value)
+    }
+
+    const updateTrip =() => {
+        const TripRef = firestore.collection('trip');
+        TripRef
+        .update({tripName: newTripName, tripDetail: newTripDetail})
+        .then(()=> {
+            alert('Trip info is edited')
+        })
+        .catch((err)=> {
+            console.log('Error Getting Doc:', err)
+        })
+        setIsEdit(!isEdit)
+    }
+
+    const deleteTrip = () => {
+
+    }
+
+
 
     useEffect(() => {
         getTripName()
@@ -114,10 +149,15 @@ function TripPage() {
     return (
         <div>
             <WhiteContainer>
-                {trip && trip.tripName}
-                <TripDetail>
-                    {trip && trip.tripDetail}
-                </TripDetail>
+                {isEdit ? <InputRed onChange={changeTripName} value={trip.tripName}/> : <>{trip && trip.tripName}</> }
+                
+                {isEdit ? <TextAreaRed onChange={changeTripDetail} value={trip.tripDetail}/> : <TripDetail>{trip && trip.tripDetail}</TripDetail> }
+                
+                <div style={{display: "flex",}}>
+                {isEdit ? <ButtonRedSmall onClick={updateTrip}>Done</ButtonRedSmall> : <ButtonRedSmall onClick={changeEditStatus}>Edit</ButtonRedSmall>}
+                
+                <ButtonRedSmall onClick={deleteTrip}>Delete</ButtonRedSmall>
+                </div>
             </WhiteContainer>
             <RedContainer>
                 <ButtonWhiteBorder onClick={goToTripInfo}>Trip Info</ButtonWhiteBorder>

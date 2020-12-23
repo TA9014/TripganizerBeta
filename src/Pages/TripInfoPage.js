@@ -1,7 +1,9 @@
-import React from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { ButtonWhiteBorder, ButtonWhiteSmall } from '../components/ButtonComponent'
+import { AuthContext } from '../auth/Auth';
+import { firestore, auth } from '../database/firebase';
 
 const WhiteContainer = styled.div`
 @media only screen and (max-width: 500px){
@@ -71,7 +73,36 @@ margin-bottom: 10px;
 `
 
 function TripInfoPage() {
+    
+    const [loading, setLoading] = useState(true);
+    const { currentUser, trip, setTrip } = useContext(AuthContext);
     const history = useHistory();
+    const getTripName = () => {
+        const TripRef = firestore.collection('trip');
+        TripRef
+            .where("id", "==", trip.id)
+            .get()
+            .then((item) => {
+                const [tripItem] = item.docs.map((doc) => doc.data());
+                setTrip(tripItem);
+            });
+    }
+
+
+    const goToTripInfo = () => {
+        history.push("/tripInfo")
+    }
+
+
+    useEffect(() => {
+        getTripName()
+    }, [])
+
+    if (loading) {
+        setLoading(false);
+        return (<div>Loading ... </div>)
+    }
+
 
     const goToAccount = () => {
         history.push("/account")
@@ -95,7 +126,7 @@ function TripInfoPage() {
     return (
         <div>
             <WhiteContainer>
-                Trip Name
+                {trip.tripName}
             </WhiteContainer>
             <RedContainer>
                 <Container1>

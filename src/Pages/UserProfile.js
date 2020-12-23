@@ -1,9 +1,10 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { AuthContext } from '../auth/Auth'
 import { ButtonWhiteBorder } from '../components/ButtonComponent'
 import { firestore } from '../database/firebase'
+import {List} from 'antd'
 
 const WhiteContainer = styled.div`
 @media only screen and (max-width: 500px){
@@ -79,9 +80,32 @@ font-family: 'Balsamiq Sans', cursive;
 width: 130px;
 `
 
+const ListContainer = styled.ul`
+width: 90%;
+height: auto;
+display: flex;
+flex-direction: column;
+justify-content: flex-start;
+margin-bottom: 10px;
+`
+
+// const List = styled.li`
+// width: 80%;
+// display: flex;
+// justify-content: space-between;
+// margin-bottom: 5px;
+// color: white;
+// border-radius: 15px;
+// font-family: 'Balsamiq Sans', cursive;
+
+// `
+
 function UserProfile() {
     const [loading, setLoading] = useState(true);
     const { currentUser, setCurrentUser, trip, setTrip } = useContext(AuthContext);
+    const [tripList, setTripList] = useState([]);
+    const allTripData = [];
+    const allTripName = [];
 
     const history = useHistory();
 
@@ -96,21 +120,49 @@ function UserProfile() {
             });
     }
 
+    const getTripList = () => {
+        const tripRef = firestore.collection('trip');
+        tripRef
+            .where("email", "==", trip.email)
+            .get()
+            .then((snapshot) => {
+                snapshot.forEach((doc) => {
+                    allTripData.push({ id: doc.id, ...doc.data() });
 
+                    console.log(`This is Trip List ${doc.data().tripName}`) //doc.data เรียกข้อมูลทุก field
+                    // console.log(allTripName.length);
+                })
+                for (let i = 0; i <= allTripData.length - 1; i++) {
+                    allTripName.push(allTripData[i].tripName)
+                    console.log(allTripName)
+                }
+                setTripList(allTripName)
+
+
+            })
+    }
+
+    
+    
+    
+    
+    const goToCrateTrip = () => {
+        history.push("/createTrip")
+    }
+
+    
+    console.log(`This is TripList State out from function ${tripList}`)
+    
+    
     useEffect(() => {
-        getUserInfo()
+        getUserInfo();
+        getTripList();
     }, [])
 
     if (loading) {
         setLoading(false);
         return (<div>Loading ... </div>)
     }
-
-    const goToCrateTrip = () => {
-        history.push("/createTrip")
-    }
-
-
     return (
         <div>
             <WhiteContainer>
@@ -129,6 +181,12 @@ function UserProfile() {
 
             </WhiteContainer>
             <RedContainer>
+                <ListContainer>
+                    <List dataSource={tripList}
+                    renderItem={item => <List.Item style={{cursor: "pointer", width: '200px', fontSize: "24px"}}>{item}</List.Item>}
+                    />
+
+                </ListContainer>
                 <ButtonWhiteBorder onClick={goToCrateTrip}>Start a Trip</ButtonWhiteBorder>
 
             </RedContainer>
