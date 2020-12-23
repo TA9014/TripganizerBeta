@@ -123,7 +123,7 @@ function Navbar() {
     console.log(userNickName)
 
     const goHome = () => {
-        history.push("/home")
+        history.push("/")
     }
 
     const goToProfile = () => {
@@ -134,14 +134,17 @@ function Navbar() {
         history.goBack();
     }
 
+    const goToLogin = () => {
+        history.push("/login")
+    }
+
     return (
         <div>
             <NavbarContainer>
                 <BackButton onClick={goBack} />
                 <TripganizerText onClick={goHome}>TRIPGANIZER</TripganizerText>
-                {currentUser ? <> <UserText onClick={goToProfile}>{userNickName}</UserText> <UserText onClick={logout}>/ Logout</UserText></> : <UserText>Login / Register</UserText>}
+                {currentUser ? <> <UserText onClick={goToProfile}>{userNickName}</UserText> <UserText onClick={logout}>/ Logout</UserText></> : <UserText onClick={goToLogin}>Login / Register</UserText>}
 
-                {/* <UserText onClick={logout}>Logout</UserText> */}
             </NavbarContainer>
         </div>
     )

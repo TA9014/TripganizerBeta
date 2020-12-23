@@ -85,11 +85,11 @@ function TripPage() {
     const getTripName = () => {
         const TripRef = firestore.collection('trip');
         TripRef
-            .where("id", "==", trip[0].id)
+            .where("id", "==", trip.id)
             .get()
             .then((item) => {
-                const items = item.docs.map((doc) => doc.data());
-                setTrip(items);
+                const [tripItem] = item.docs.map((doc) => doc.data());
+                setTrip(tripItem);
             });
     }
 
@@ -114,9 +114,9 @@ function TripPage() {
     return (
         <div>
             <WhiteContainer>
-                {trip[0] && trip[0].tripName}
+                {trip && trip.tripName}
                 <TripDetail>
-                    {trip[0] && trip[0].tripDetail}
+                    {trip && trip.tripDetail}
                 </TripDetail>
             </WhiteContainer>
             <RedContainer>

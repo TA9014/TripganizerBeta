@@ -27,7 +27,7 @@ const components = {
         page: UserProfile
     },
     home: {
-        path: "/home",
+        path: "/" || "/home",
         page: Homepage
     },
     createTrip: {

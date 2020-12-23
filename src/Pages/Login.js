@@ -106,6 +106,10 @@ function Login() {
         });
       };
 
+      const goToRegister = () => {
+          history.push("/register")
+      }
+
     return (
         <div>
             <WhiteContainer>
