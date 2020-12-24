@@ -1,5 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components'
+// import { AuthContext } from '../auth/Auth';
 import { ButtonWhiteBorder } from '../components/ButtonComponent'
 import { InputRed } from '../components/InputComponent'
 import { firestore, auth } from '../database/firebase';
@@ -86,6 +88,8 @@ const MockNavbar = styled.div`
 `
 
 function Register() {
+    // const {setCurrentUser} = useContext(AuthContext)
+    const history = useHistory();
     const [email, setEmail] = useState('');
     const handleEmail = (e) => {
         setEmail(e.target.value)
@@ -132,6 +136,13 @@ function Register() {
                 contactNumber,
                 class: "Normal User"
             })
+            // setCurrentUser({
+            //     email,
+            //     nickName,
+            //     birthDate,
+            //     contactNumber,
+            //     class: "Normal User"
+            // })
             register();
             alert(`User is created`)
             clearInput();
@@ -145,6 +156,8 @@ function Register() {
         auth
           .createUserWithEmailAndPassword(email, password)
           .then(() => {
+              history.push("/")
+
           })
           .catch((err) => {
             console.error(err);

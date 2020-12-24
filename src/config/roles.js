@@ -65,7 +65,8 @@ const components = {
     talkie: {
         path: "/walkietalkie",
         page: WalkieTalkie
-    }
+    },
+   
 }
 
 const roles = {

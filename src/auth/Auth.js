@@ -16,6 +16,7 @@ function usePersistedState(key, defaultValue) {
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    // const [userNickName, setUserNickname] = useState(null);
 
     const [trip, setTrip] = usePersistedState("trip",{});
 

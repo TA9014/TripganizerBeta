@@ -128,7 +128,7 @@ function Login() {
 
                 <Container1>
                     <Text1>Forget your password / </Text1>
-                    <Text1>Register</Text1>
+                    <Text1 onClick={goToRegister}>Register</Text1>
                 </Container1>
                 
             </WhiteContainer>

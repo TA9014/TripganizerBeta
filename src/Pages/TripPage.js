@@ -106,21 +106,22 @@ function TripPage() {
         history.push("/tripInfo")
     }
 
-    const [newTripName, setNewTripName] = useState('')
+    const [newTripName, setNewTripName] = useState(trip.tripName)
     const changeTripName = (e) => {
         setNewTripName(e.target.value)
     }
 
-    const [newTripDetail, setNewTripDetail] = useState('')
+    const [newTripDetail, setNewTripDetail] = useState(trip.tripDetail)
     const changeTripDetail = (e) => {
         setNewTripDetail(e.target.value)
     }
 
     const updateTrip =() => {
         const TripRef = firestore.collection('trip');
-        TripRef
+        TripRef.doc(trip.id)
         .update({tripName: newTripName, tripDetail: newTripDetail})
         .then(()=> {
+            setTrip({...trip, tripName: newTripName, tripDetail: newTripDetail})
             alert('Trip info is edited')
         })
         .catch((err)=> {
@@ -130,7 +131,12 @@ function TripPage() {
     }
 
     const deleteTrip = () => {
-
+        const TripRef = firestore.collection('trip');
+        TripRef.doc(trip.id)
+        .delete()
+        .then()
+        alert(`Trip name ${trip.tripName} was deleted`)
+        history.push("/userProfile")
     }
 
 
@@ -149,9 +155,9 @@ function TripPage() {
     return (
         <div>
             <WhiteContainer>
-                {isEdit ? <InputRed onChange={changeTripName} value={trip.tripName}/> : <>{trip && trip.tripName}</> }
+                {isEdit ? <InputRed onChange={changeTripName} value={newTripName}/> : <>{trip && trip.tripName}</> }
                 
-                {isEdit ? <TextAreaRed onChange={changeTripDetail} value={trip.tripDetail}/> : <TripDetail>{trip && trip.tripDetail}</TripDetail> }
+                {isEdit ? <TextAreaRed onChange={changeTripDetail} value={newTripDetail}/> : <TripDetail>{trip && trip.tripDetail}</TripDetail> }
                 
                 <div style={{display: "flex",}}>
                 {isEdit ? <ButtonRedSmall onClick={updateTrip}>Done</ButtonRedSmall> : <ButtonRedSmall onClick={changeEditStatus}>Edit</ButtonRedSmall>}

@@ -116,10 +116,7 @@ function Navbar() {
         }
     }
 
-    useEffect(() => {
-        getUserNickName();
-    }, []);
-
+   
     console.log(userNickName)
 
     const goHome = () => {
@@ -137,6 +134,10 @@ function Navbar() {
     const goToLogin = () => {
         history.push("/login")
     }
+    
+    useEffect(() => {
+        getUserNickName();
+    }, []);
 
     return (
         <div>

@@ -126,23 +126,32 @@ function UserProfile() {
             .where("email", "==", trip.email)
             .get()
             .then((snapshot) => {
+                console.log(snapshot)
                 snapshot.forEach((doc) => {
+                    console.log(doc)
                     allTripData.push({ id: doc.id, ...doc.data() });
 
                     console.log(`This is Trip List ${doc.data().tripName}`) //doc.data เรียกข้อมูลทุก field
                     // console.log(allTripName.length);
                 })
+                
                 for (let i = 0; i <= allTripData.length - 1; i++) {
                     allTripName.push(allTripData[i].tripName)
                     console.log(allTripName)
                 }
-                setTripList(allTripName)
+                setTripList(allTripData)
 
 
             })
     }
 
     
+
+    const goToTrip = (trip) => {
+console.log(trip)
+        setTrip(trip);
+        history.push("/trip")
+    }
     
     
     
@@ -183,7 +192,7 @@ function UserProfile() {
             <RedContainer>
                 <ListContainer>
                     <List dataSource={tripList}
-                    renderItem={item => <List.Item style={{cursor: "pointer", width: '200px', fontSize: "24px"}}>{item}</List.Item>}
+                    renderItem={item => <List.Item style={{cursor: "pointer", width: '200px', fontSize: "24px", marginLeft: "10px"}} onClick={()=>goToTrip(item)}>{item.tripName}</List.Item>}
                     />
 
                 </ListContainer>
